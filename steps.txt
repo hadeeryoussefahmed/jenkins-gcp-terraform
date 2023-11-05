@@ -1,7 +1,7 @@
 1- create terraform repo for infrastructure
 2- create flask-kubernetes-docker repo
 
-3- create jenkins vm
+3- create jenkins vm on gcp
 4- add terraform SA to jenkins vm
 5- add static ip to vm
 6- open access to vm in firewall

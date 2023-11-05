@@ -1,30 +1,37 @@
 pipeline {
+    // run on any agent
     agent any
+    // define user input
     parameters {
         choice choices: ['apply', 'destroy'], name: 'action'
     } 
 
     stages {
+        // git clone for terraform files
         stage('git') {
             steps {
                 git branch: 'main', url: 'https://github.com/hadeeryoussefahmed/jenkins-gcp-terraform.git'
             }
         }
+        // debug user input
         stage('Print user option') {
             steps {
                 sh "echo ${params.action}"
             }
         }
+        // test gcp SA credentials
         stage('Test Gcp auth') {
             steps {
                 sh "gcloud auth list"
             }
         }
+        // initialize our terraform
         stage('Terraform Init') {
             steps {
                 sh 'terraform init'
             }
         }
+        // apply or destroy infrastructure based on user input
         stage('Apply User Action') {
             steps {
                 script {
@@ -38,6 +45,7 @@ pipeline {
             }
         }
         }
+        // invoke kubernetes pipeline
         stage('deploy app') {
             steps {
                 script {

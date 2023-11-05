@@ -1,17 +1,21 @@
 pipeline {
+    // run on any jenkins agent
     agent any
 
     stages {
+        // clone app , dockerfile , kubernetes files
         stage('git') {
             steps {
                 git branch: 'main', url: 'https://github.com/hadeeryoussefahmed/flask-python-docker.git'
             }
         }
+        // test gcp SA credentials 
         stage('Test Gcp auth') {
             steps {
                 sh "gcloud auth list"
             }
         }
+        // add credentials for artifact repo to docker, build app to docker image and push it to registry
         stage('authenticate docker to artifact repo, build and push image ') {
             steps {
                 script {
@@ -22,7 +26,7 @@ pipeline {
                     }
             }
         }
-
+        // add gke credentials, deploy app deployment to kubernets
         stage('apply deployment to cluster') {
             steps {
                 script {

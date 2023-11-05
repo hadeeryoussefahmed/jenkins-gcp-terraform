@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    parameters {
+        choice choices: ['apply', 'destroy'], name: 'action'
+    } 
+
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hadeeryoussefahmed/jenkins-gcp-terraform.git'
+            }
+        }
+        stage('Print user option') {
+            steps {
+                sh "echo ${params.action}"
+            }
+        }
+        stage('Test Gcp auth') {
+            steps {
+                sh "gcloud auth list"
+            }
+        }
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+        stage('Apply User Action') {
+            steps {
+                script {
+                def action_value = params.action
+
+                if (action_value == 'apply') {
+                    sh 'terraform apply -auto-approve' 
+                } else if (action_value == 'destroy') {
+                    sh 'terraform destroy -auto-approve' 
+                }
+            }
+        }
+        }
+        stage('deploy app') {
+            steps {
+                script {
+                    def action_value = params.action
+    
+                    if (action_value == 'apply') {
+                        build(job: 'kubernetes-pipeline') 
+                    }
+                    else if (action_value == 'destroy') {
+                        sh "echo pass" 
+                    }
+                }
+            }
+        }
+    }
+}

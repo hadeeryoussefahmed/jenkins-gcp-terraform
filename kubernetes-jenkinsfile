@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hadeeryoussefahmed/flask-python-docker.git'
+            }
+        }
+        stage('Test Gcp auth') {
+            steps {
+                sh "gcloud auth list"
+            }
+        }
+        stage('authenticate docker to artifact repo, build and push image ') {
+            steps {
+                script {
+                    def access_token = sh(script: 'gcloud auth print-access-token', returnStdout: true).trim()
+                    sh "docker login -u oauth2accesstoken -p \"$access_token\" us-central1-docker.pkg.dev"
+                    sh 'docker build -t us-central1-docker.pkg.dev/encoded-metrics-401109/my-repository/flask:1 .'
+                    sh 'docker push  us-central1-docker.pkg.dev/encoded-metrics-401109/my-repository/flask:1'
+                    }
+            }
+        }
+
+        stage('apply deployment to cluster') {
+            steps {
+                script {
+                sh 'gcloud container clusters get-credentials my-cluster --region us-east1 --project encoded-metrics-401109'
+
+                sh 'kubectl apply -f flask.yml'
+            }
+        }
+        }
+    }
+}

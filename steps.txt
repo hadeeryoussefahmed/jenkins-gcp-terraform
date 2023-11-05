@@ -1,0 +1,13 @@
+1- create terraform repo for infrastructure
+2- create flask-kubernetes-docker repo
+
+3- create jenkins vm
+4- add terraform SA to jenkins vm
+5- add static ip to vm
+6- open access to vm in firewall
+7- use init-script to install dependences needed (java,jenkins,git.docker,terraform,gcp components for k8s)
+
+8- create terraform pipeline
+9- create kubernetes pipeline
+
+10- configure terraform pipeline to trigger kubernetes pipeline

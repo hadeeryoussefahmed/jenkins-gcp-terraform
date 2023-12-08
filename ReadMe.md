@@ -1,6 +1,6 @@
-<h1>GCP-Terraform-K8S-MongoDB-Statefulset</h1>
-This project will assess your Google Cloud, Networking, </br>
-DB, Development,Terraform, Docker, and Kubernetes skills.</br>
+<h1>Overview</h1>
+This project showcases the creation of a comprehensive CI/CD (Continuous Integration/Continuous Deployment), </br>
+pipeline on Google Cloud Platform (GCP). The project evaluates expertise in various domains, including GCP,</br>
 In this project you will deploy a simple Node.js web application </br>
 (stateless) that interacts with a highly available MongoDB </br>
 (stateful) replicated across 3 zones and consisting </br>
